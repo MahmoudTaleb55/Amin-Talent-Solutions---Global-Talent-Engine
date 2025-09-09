@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amin Talent Solutions Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><style>.cls-1{fill:%23ff6b35;}.cls-2{fill:%23ffffff;}</style></defs><rect class='cls-1' width='100' height='100' rx='15'/><path class='cls-2' d='M50,25c-8.3,0-15,6.7-15,15s6.7,15,15,15,15-6.7,15-15S58.3,25,50,25Zm0,25c-5.5,0-10-4.5-10-10s4.5-10,10-10,10,4.5,10,10S55.5,50,50,50Z'/><path class='cls-2' d='M35,65c0-8.3,6.7-15,15-15h0c8.3,0,15,6.7,15,15v5H35V65Z'/></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.2.0/dist/css/coreui.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/css/theme.css?v=20250907" rel="stylesheet">
+    <style id="nprogress-style">
+      /* NProgress-like top bar */
+      #top-progress-bar { position: fixed; top:0; left:0; height:3px; width:0; z-index: 2000; background: linear-gradient(90deg, #1e3a8a, #3b82f6); box-shadow: 0 0 10px rgba(59,130,246,.6); transition: width .2s ease, opacity .3s ease; }
+      #top-progress-peg { position:absolute; right:0; width:100px; height:100%; box-shadow: 0 0 10px #3b82f6, 0 0 5px #3b82f6; opacity:.9; transform: rotate(3deg) translate(0, -4px); }
+
+      /* Skeletons and shimmer */
+      .skeleton { position: relative; overflow: hidden; background-color: #e9ecef; border-radius: .35rem; }
+      .skeleton::after { content: ""; position: absolute; top:0; left:-150px; height:100%; width:150px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.5), rgba(255,255,255,0)); animation: shimmer 1.2s infinite; }
+      @keyframes shimmer { 0%{ transform: translateX(0); } 100% { transform: translateX(600px); } }
+      .skeleton-text { height: 12px; margin-bottom: 8px; }
+      .skeleton-title { height: 18px; width: 60%; }
+      .skeleton-badge { height: 18px; width: 90px; }
+    </style>
+    <style>
+        :root {
+            --primary-color: #0A0A0A;
+            --secondary-color: #FFFFFF;
+            --accent-color: #1e3a8a;
+            --accent-hover: #1e40af;
+            --neutral-light: #F5F5F5;
+            --neutral-medium: #e9ecef;
+            --neutral-dark: #333333;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', 'Open Sans', sans-serif;
+            color: var(--neutral-dark);
+            background-color: var(--neutral-light);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--primary-color);
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            transition: var(--transition);
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            margin: 4px 16px;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .sidebar .nav-link.active {
+            background-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(30, 58, 138, 0.3);
+        }
+
+        .sidebar .sidebar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            background-color: var(--neutral-light);
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background: var(--secondary-color);
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--neutral-medium);
+        }
+
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.25rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            background: var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 24px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-open {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-assigned {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-completed {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .status-pending {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--neutral-light) 100%);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.875rem;
+        }
+
+        .table {
+            background: var(--secondary-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.875rem;
+            border: none;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--neutral-light);
+        }
+
+        .form-control {
+            border: 2px solid var(--neutral-medium);
+            border-radius: var(--border-radius);
+            padding: 12px 16px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.25);
+        }
+
+        .modal-content {
+            border-radius: var(--border-radius);
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            background: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2c3e50 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .section-alternate {
+            background: var(--neutral-medium);
+            padding: 60px 0;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 30px;
+            height: 100%;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer h5 {
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                z-index: 1000;
+                transition: var(--transition);
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Professional Login Page Styles */
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2c3e50 50%, var(--accent-color) 100%);
+        }
+
+        .text-gray-900 {
+            color: var(--primary-color) !important;
+        }
+
+        .font-weight-bold {
+            font-weight: 700 !important;
+        }
+
+        /* Role-specific dashboard enhancements */
+        .company-welcome {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .freelancer-welcome {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .admin-welcome {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .role-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .welcome-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Password Requirements Styles */
+        .password-requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+
+        .password-requirement i {
+            width: 12px;
+            margin-right: 6px;
+            transition: var(--transition);
+        }
+
+        .password-requirement.valid i {
+            color: #28a745 !important;
+        }
+
+        .password-requirement.valid i:before {
+            content: '\f00c'; /* check icon */
+        }
+
+        .password-requirement.invalid i {
+            color: #dc3545 !important;
+        }
+
+        .password-requirement.invalid i:before {
+            content: '\f00d'; /* times icon */
+        }
+
+        .password-match {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .password-match.valid i {
+            color: #28a745 !important;
+        }
+
+        .password-match.valid i:before {
+            content: '\f00c'; /* check icon */
+        }
+
+        .password-match.invalid i {
+            color: #dc3545 !important;
+        }
+
+        .password-match.invalid i:before {
+            content: '\f00d'; /* times icon */
+        }
+    </style>
+</head>
+<body>
+    <!-- Professional Login Page -->
+    <div id="loginPage" class="min-vh-100 d-flex align-items-center justify-content-center bg-gradient-primary">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="card shadow-lg border-0 rounded-lg">
+                        <div class="card-header bg-white border-0 pt-4 pb-0">
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-briefcase fa-3x text-primary"></i>
+                                </div>
+                                <h2 class="h4 text-gray-900 mb-1">Welcome to</h2>
+                                <h1 class="h3 text-primary font-weight-bold mb-4">Amin Talent Solutions</h1>
+                                <p class="text-muted mb-0">Connect. Collaborate. Succeed.</p>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="loginForm">
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                                    <label for="email">
+                                        <i class="fas fa-envelope me-2"></i>Email Address
+                                    </label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" id="password" placeholder="Password" required>
+                                    <label for="password">
+                                        <i class="fas fa-lock me-2"></i>Password
+                                    </label>
+                                </div>
+                                <div class="form-floating mb-4">
+                                    <select class="form-select" id="userRole" required>
+                                        <option value="">Select Your Role</option>
+                                        <option value="company">Company Representative</option>
+                                        <option value="freelancer">Talent</option>
+                                                                            </select>
+                                    <label for="userRole">
+                                        <i class="fas fa-user-tag me-2"></i>Role
+                                    </label>
+                                </div>
+                                <div id="loginError" class="alert alert-danger d-none" role="alert">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <span id="errorMessage"></span>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="loginBtn">
+                                        <span class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
+                                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer bg-light border-0 text-center py-3">
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-shield-alt me-1"></i>
+                                    Secure login powered by Amin Talent Solutions
+                                </small>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-link btn-sm text-decoration-none" id="showRegisterBtn">
+                                    <i class="fas fa-user-plus me-1"></i>New Company? Register Here
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Registration Modal -->
+    <div class="modal fade" id="companyRegisterModal" tabindex="-1" aria-labelledby="companyRegisterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="companyRegisterModalLabel">
+                        <i class="fas fa-building me-2"></i>Company Registration
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="companyRegisterForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="companyName" placeholder="Company Name" required>
+                                    <label for="companyName">
+                                        <i class="fas fa-building me-2"></i>Company Name
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="username" placeholder="Username" required>
+                                    <label for="username">
+                                        <i class="fas fa-user me-2"></i>Username
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="contactPerson" placeholder="Contact Person" required>
+                            <label for="contactPerson">
+                                <i class="fas fa-user me-2"></i>Contact Person
+                            </label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="companyEmail" placeholder="Email Address" required>
+                                    <label for="companyEmail">
+                                        <i class="fas fa-envelope me-2"></i>Email Address
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="tel" class="form-control" id="companyPhone" placeholder="Phone Number" required>
+                                    <label for="companyPhone">
+                                        <i class="fas fa-phone me-2"></i>Phone Number
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="companyAddress" placeholder="Company Address" required>
+                            <label for="companyAddress">
+                                <i class="fas fa-map-marker-alt me-2"></i>Company Address
+                            </label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="companyIndustry" placeholder="Industry" required>
+                                    <label for="companyIndustry">
+                                        <i class="fas fa-industry me-2"></i>Industry
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="companySize" placeholder="Company Size" required>
+                                    <label for="companySize">
+                                        <i class="fas fa-users me-2"></i>Company Size
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" id="companyDescription" placeholder="Company Description" style="height: 100px" required></textarea>
+                            <label for="companyDescription">
+                                <i class="fas fa-info-circle me-2"></i>Company Description
+                            </label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" id="companyPassword" placeholder="Password" required>
+                                    <label for="companyPassword">
+                                        <i class="fas fa-lock me-2"></i>Password
+                                    </label>
+                                </div>
+                                <!-- Password Requirements -->
+                                <div id="passwordRequirements" class="mt-2 d-none">
+                                    <small class="text-muted">Password must contain:</small>
+                                    <div class="password-requirement" data-requirement="length">
+                                        <i class="fas fa-times text-danger me-1"></i>
+                                        <small>At least 8 characters</small>
+                                    </div>
+                                    <div class="password-requirement" data-requirement="uppercase">
+                                        <i class="fas fa-times text-danger me-1"></i>
+                                        <small>One uppercase letter</small>
+                                    </div>
+                                    <div class="password-requirement" data-requirement="lowercase">
+                                        <i class="fas fa-times text-danger me-1"></i>
+                                        <small>One lowercase letter</small>
+                                    </div>
+                                    <div class="password-requirement" data-requirement="number">
+                                        <i class="fas fa-times text-danger me-1"></i>
+                                        <small>One number</small>
+                                    </div>
+                                    <div class="password-requirement" data-requirement="special">
+                                        <i class="fas fa-times text-danger me-1"></i>
+                                        <small>One special character</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+                                    <label for="confirmPassword">
+                                        <i class="fas fa-lock me-2"></i>Confirm Password
+                                    </label>
+                                </div>
+                                <!-- Password Match Indicator -->
+                                <div id="passwordMatchIndicator" class="mt-2 d-none">
+                                    <i class="fas fa-times text-danger me-1"></i>
+                                    <small class="text-danger">Passwords do not match</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="registerError" class="alert alert-danger d-none" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span id="registerErrorMessage"></span>
+                        </div>
+                        <div id="registerSuccess" class="alert alert-success d-none" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span id="registerSuccessMessage"></span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <button type="submit" form="companyRegisterForm" class="btn btn-primary" id="registerBtn">
+                        <span class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
+                        <i class="fas fa-user-plus me-2"></i>Register Company
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (Hidden initially) -->
+    <div id="app" class="d-none">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-3 col-lg-2 px-0">
+                    <div class="sidebar sidebar-dark sidebar-fixed shadow-sm" id="sidebar">
+                        <div class="p-3">
+                            <h5 class="text-center mb-4 sidebar-brand">
+                                <i class="fas fa-briefcase me-2"></i>
+                                Amin Talent Solutions
+                            </h5>
+                            <nav class="nav flex-column sidebar-nav">
+                                <a class="nav-link active" href="#" id="dashboardLink">
+                                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                </a>
+                                <div id="companyMenu" class="d-none">
+                                    <a class="nav-link" href="#" id="jobRequestsLink">
+                                        <i class="fas fa-clipboard-list me-2"></i>Job Requests
+                                    </a>
+                                    <a class="nav-link" href="#" id="assignmentsLink">
+                                        <i class="fas fa-user-check me-2"></i>Assignments
+                                    </a>
+                                    <a class="nav-link" href="#" id="trackProgressLink">
+                                        <i class="fas fa-chart-line me-2"></i>Track Progress
+                                    </a>
+                                </div>
+                                <div id="freelancerMenu" class="d-none">
+                                    <a class="nav-link" href="#" id="myAssignmentsLink">
+                                        <i class="fas fa-tasks me-2"></i>My Assignments
+                                    </a>
+                                    <a class="nav-link" href="#" id="submitDeliverableLink">
+                                        <i class="fas fa-upload me-2"></i>Submit Deliverable
+                                    </a>
+                                    <a class="nav-link" href="#" id="updateStatusLink">
+                                        <i class="fas fa-edit me-2"></i>Update Status
+                                    </a>
+                                </div>
+                                <div id="adminMenu" class="d-none">
+                                    <a class="nav-link" href="#" id="manageUsersLink">
+                                        <i class="fas fa-users me-2"></i>Manage Users
+                                    </a>
+                                    <a class="nav-link" href="#" id="overseeJobsLink">
+                                        <i class="fas fa-eye me-2"></i>Oversee Jobs
+                                    </a>
+                                    <a class="nav-link" href="#" id="analyticsLink">
+                                        <i class="fas fa-chart-bar me-2"></i>Analytics
+                                    </a>
+                                </div>
+                                <div id="ceoMenu" class="d-none">
+                                    <a class="nav-link" href="#" id="ceoManageUsersLink">
+                                        <i class="fas fa-users-cog me-2"></i>Users & Roles
+                                    </a>
+                                    <a class="nav-link" href="#" id="ceoOverseeJobsLink">
+                                        <i class="fas fa-briefcase me-2"></i>All Projects
+                                    </a>
+                                    <a class="nav-link" href="#" id="ceoAnalyticsLink">
+                                        <i class="fas fa-chart-pie me-2"></i>Executive Analytics
+                                    </a>
+                                    <a class="nav-link" href="#" id="platformControlsLink">
+                                        <i class="fas fa-sliders-h me-2"></i>Platform Controls
+                                    </a>
+                                </div>
+                                <hr class="my-3">
+                                <a class="nav-link" href="#" id="logoutLink">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-md-9 col-lg-10 px-0">
+                    <div class="main-content">
+                        <!-- Header -->
+                        <header class="header header-sticky mb-4">
+                            <div class="container-fluid d-flex align-items-center justify-content-between py-2 bg-white shadow-sm">
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" aria-label="Toggle sidebar" onclick="document.getElementById('sidebar').classList.toggle('show')">
+                                        <i class="fas fa-bars"></i>
+                                    </button>
+                                    <span class="navbar-brand mb-0 h1" id="pageTitle">Dashboard</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="me-3" id="userInfo">Welcome, User</span>
+                                    <button class="btn btn-outline-primary btn-sm" id="logoutBtn">
+                                        <i class="fas fa-sign-out-alt me-1"></i>Logout
+                                    </button>
+                                </div>
+                            </div>
+                        </header>
+
+                        <!-- Content Area -->
+                        <div class="container-fluid p-4">
+                            <!-- Dashboard Content -->
+                            <div id="dashboardContent">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-body text-center">
+                                                <h4>Welcome to Amin Talent Solutions</h4>
+                                                <p class="text-muted">Please select an option from the sidebar to get started.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Company Dashboard -->
+                            <div id="companyDashboard" class="d-none">
+                                <!-- Welcome Card for Company -->
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <div class="card welcome-card company-welcome border-0 shadow-sm">
+                                            <div class="card-body welcome-content text-center py-5">
+                                                <div class="role-badge">C</div>
+                                                <i class="fas fa-building fa-4x mb-3 opacity-75"></i>
+                                                <h2 class="card-title mb-3">Welcome to Your Company Dashboard</h2>
+                                                <p class="card-text lead mb-4">Manage your projects, hire top talent, and track progress with ease.</p>
+                                                <div class="row text-center">
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="companyJobCount">0</div>
+                                                        <div class="metric-label">Active Jobs</div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                <div class="metric-number" id="companyFreelancerCount">0</div>
+                                                        <div class="metric-label">Hired Freelancers</div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="companyPendingCount">0</div>
+                                                        <div class="metric-label">Pending Deliverables</div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="companyCompletedCount">0</div>
+                                                        <div class="metric-label">Completed Projects</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0">Recent Job Requests</h5>
+                                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createJobModal">
+                                                    <i class="fas fa-plus me-1"></i>Create Job Request
+                                                </button>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="companyJobRequestsList">
+                                                    <p class="text-muted text-center">Loading job requests...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Freelancer Dashboard -->
+                            <div id="freelancerDashboard" class="d-none">
+                                <!-- Welcome Card for Freelancer -->
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <div class="card welcome-card freelancer-welcome border-0 shadow-sm">
+                                            <div class="card-body welcome-content text-center py-5">
+                                                <div class="role-badge">F</div>
+                                                <i class="fas fa-user-tie fa-4x mb-3 opacity-75"></i>
+                                                <h2 class="card-title mb-3">Welcome to Your Freelancer Dashboard</h2>
+                                                <p class="card-text lead mb-4">Showcase your skills, complete projects, and grow your freelance career.</p>
+                                                <div class="row text-center">
+                                                    <div class="col-md-4">
+                                                        <div class="metric-number" id="freelancerAssignmentCount">0</div>
+                                                        <div class="metric-label">Active Assignments</div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="metric-number" id="freelancerCompletedCount">0</div>
+                                                        <div class="metric-label">Completed Tasks</div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="metric-number" id="freelancerPendingCount">0</div>
+                                                        <div class="metric-label">Pending Deliverables</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-header bg-white border-0">
+                                                <h5 class="mb-0">My Assignments</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="freelancerAssignmentsList">
+                                                    <p class="text-muted text-center">Loading assignments...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Admin Dashboard -->
+                            <div id="adminDashboard" class="d-none">
+                                <!-- Welcome Card for Admin -->
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <div class="card welcome-card admin-welcome border-0 shadow-sm">
+                                            <div class="card-body welcome-content text-center py-5">
+                                                <div class="role-badge">A</div>
+                                                <i class="fas fa-crown fa-4x mb-3 opacity-75"></i>
+                                                <h2 class="card-title mb-3">Welcome to Your Admin Dashboard</h2>
+                                                <p class="card-text lead mb-4">Oversee all operations, manage users, and ensure platform excellence.</p>
+                                                <div class="row text-center">
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="adminUserCount">0</div>
+                                                        <div class="metric-label">Total Users</div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="adminJobCount">0</div>
+                                                        <div class="metric-label">Total Jobs</div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="adminActiveCount">0</div>
+                                                        <div class="metric-label">Active Projects</div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="adminCompletedCount">0</div>
+                                                        <div class="metric-label">Completed Projects</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-header bg-white border-0">
+                                                <h5 class="mb-0">User Distribution</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="userChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-header bg-white border-0">
+                                                <h5 class="mb-0">Job Status Overview</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="jobChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CEO Dashboard -->
+                            <div id="ceoDashboard" class="d-none">
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <div class="card welcome-card admin-welcome border-0 shadow-sm">
+                                            <div class="card-body welcome-content text-center py-5">
+                                                <div class="role-badge">C</div>
+                                                <i class="fas fa-user-astronaut fa-4x mb-3 opacity-75"></i>
+                                                <h2 class="card-title mb-3">Welcome to the CEO Dashboard</h2>
+                                                <p class="card-text lead mb-4">Oversee the entire platform, monitor performance, and manage controls.</p>
+                                                <div class="row text-center">
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="ceoUserCount">0</div>
+                                                        <div class="metric-label">Total Users</div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="ceoJobCount">0</div>
+                                                        <div class="metric-label">Total Jobs</div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="ceoActiveCount">0</div>
+                                                        <div class="metric-label">Active Assignments</div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="metric-number" id="ceoCompletedCount">0</div>
+                                                        <div class="metric-label">Approved Deliverables</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-header bg-white border-0">
+                                                <h5 class="mb-0">User Distribution</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="ceoUserChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-header bg-white border-0">
+                                                <h5 class="mb-0">Job Status Overview</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="ceoJobChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Content Areas -->
+                            <div id="jobRequestsContent" class="d-none">
+                                <!-- Job Requests management content will be loaded here -->
+                            </div>
+
+                            <div id="assignmentsContent" class="d-none">
+                                <!-- Assignments management content will be loaded here -->
+                            </div>
+
+                            <div id="deliverablesContent" class="d-none">
+                                <!-- Deliverables management content will be loaded here -->
+                            </div>
+
+                            <div id="usersContent" class="d-none">
+                                <!-- User management content will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Modals -->
+    <div id="verificationBanner" class="alert alert-warning d-none" role="alert" aria-live="polite">
+        Please verify your email address. <button class="btn btn-sm btn-outline-dark ms-2" id="resendVerificationBtn">Resend Email</button>
+    </div>
+    <div id="modalsContainer"></div>
+
+    <!-- Create Job Request Modal -->
+    <div class="modal fade" id="createJobModal" tabindex="-1" aria-labelledby="createJobModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createJobModalLabel">Create Job Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createJobForm">
+                        <div class="mb-3">
+                            <label for="jobDescription" class="form-label">Job Description</label>
+                            <textarea class="form-control" id="jobDescription" rows="4" required
+                                placeholder="Describe the job requirements, deliverables, and any specific instructions..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jobDeadline" class="form-label">Deadline</label>
+                            <input type="date" class="form-control" id="jobDeadline" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jobStatus" class="form-label">Status</label>
+                            <select class="form-select" id="jobStatus">
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        <div id="createJobError" class="alert alert-danger d-none"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submitJobBtn">Create Job Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Deliverable Modal -->
+    <div class="modal fade" id="submitDeliverableModal" tabindex="-1" aria-labelledby="submitDeliverableModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitDeliverableModalLabel">Submit Deliverable</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="submitDeliverableForm">
+                        <div class="mb-3">
+                            <label for="deliverableAssignment" class="form-label">Assignment</label>
+                            <select class="form-select" id="deliverableAssignment" required>
+                                <option value="">Select Assignment</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deliverableContent" class="form-label">Deliverable Description</label>
+                            <textarea class="form-control" id="deliverableContent" rows="4" required
+                                placeholder="Describe what you're submitting..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deliverableFile" class="form-label">Upload File (Optional)</label>
+                            <input type="file" class="form-control" id="deliverableFile" accept=".pdf,.doc,.docx,.zip,.jpg,.png">
+                            <div class="form-text">Supported formats: PDF, DOC, DOCX, ZIP, JPG, PNG (Max 10MB)</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deliverableSubmittedOn" class="form-label">Submission Date</label>
+                            <input type="date" class="form-control" id="deliverableSubmittedOn" required>
+                        </div>
+                        <div id="submitDeliverableError" class="alert alert-danger d-none"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submitDeliverableBtn">Submit Deliverable</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateStatusModalLabel">Update Assignment Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateStatusForm">
+                        <div class="mb-3">
+                            <label for="statusAssignment" class="form-label">Assignment</label>
+                            <select class="form-select" id="statusAssignment" required>
+                                <option value="">Select Assignment</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="statusUpdate" class="form-label">Status</label>
+                            <select class="form-select" id="statusUpdate" required>
+                                <option value="">Select Status</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Review Required">Review Required</option>
+                                <option value="Completed">Completed</option>
+                                <option value="On Hold">On Hold</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="statusNotes" class="form-label">Notes (Optional)</label>
+                            <textarea class="form-control" id="statusNotes" rows="3"
+                                placeholder="Add any notes about the current status..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="statusUpdatedOn" class="form-label">Update Date</label>
+                            <input type="date" class="form-control" id="statusUpdatedOn" required>
+                        </div>
+                        <div id="updateStatusError" class="alert alert-danger d-none"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updateStatusBtn">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Freelancer Modal -->
+    <div class="modal fade" id="assignFreelancerModal" tabindex="-1" aria-labelledby="assignFreelancerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignFreelancerModalLabel">Assign Freelancer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="assignFreelancerForm">
+                        <input type="hidden" id="assignJobId">
+                        <div class="mb-3">
+                            <label for="assignFreelancer" class="form-label">Select Freelancer</label>
+                            <select class="form-select" id="assignFreelancer" required>
+                                <option value="">Select Freelancer</option>
+                            </select>
+                        </div>
+                        <div id="assignFreelancerError" class="alert alert-danger d-none"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="assignFreelancerBtn">Assign Freelancer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Job Request Modal -->
+    <div class="modal fade" id="viewJobModal" tabindex="-1" aria-labelledby="viewJobModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewJobModalLabel">Job Request Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="jobDetailsContent">
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary d-none" id="editJobBtn">Edit Job</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Assignment Modal -->
+    <div class="modal fade" id="viewAssignmentModal" tabindex="-1" aria-labelledby="viewAssignmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewAssignmentModalLabel">Assignment Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="assignmentDetailsContent">
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Toast -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="successToastMessage">
+                    Operation completed successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="errorToastMessage">
+                    An error occurred!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.2.0/dist/js/coreui.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/app.js?v=20250907"></script>
+</body>
+</html>

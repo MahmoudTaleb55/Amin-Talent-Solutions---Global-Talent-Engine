@@ -1,0 +1,27 @@
+:root{--primary:#0b2a6f;--primary-600:#0e3a92;--primary-700:#0c2f78;--primary-800:#0a2663;--secondary:#ffffff;--bg:#0f172a;--bg-soft:#111827;--card:#0b1220;--muted:#9aa4b2;--success:#16a34a;--warning:#f59e0b;--danger:#ef4444}
+body{background:linear-gradient(180deg,#0b1220 0%,#0f172a 100%);color:#e5e7eb}
+.navbar{background-color:#0b1220!important;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar{background:linear-gradient(180deg,#0b1220 0%,#0a1a3f 100%)}
+.sidebar .nav-link{color:#cbd5e1}
+.sidebar .nav-link:hover{color:#fff;background:rgba(255,255,255,.08)}
+.sidebar .nav-link.active{background:var(--primary);color:#fff}
+.card{background:rgba(17,24,39,.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.06);color:#e5e7eb}
+.card.border-0{border-color:transparent}
+.card .card-header{background:transparent;border-bottom:1px solid rgba(255,255,255,.08)}
+.card .card-header.bg-white{background:rgba(255,255,255,.06)!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
+.btn-primary{background:var(--primary);border:none}
+.btn-primary:hover{background:var(--primary-600)}
+.btn-outline-primary{border-color:var(--primary);color:#cbd5e1}
+.btn-outline-primary:hover{background:var(--primary);color:#fff}
+.form-control,.form-select{background:#0b1220;color:#e5e7eb;border:1px solid rgba(255,255,255,.15)}
+.form-control::placeholder{color:#94a3b8}
+.modal-content{background:#0b1220;color:#e5e7eb;border:1px solid rgba(255,255,255,.1)}
+.status-badge{display:inline-block;padding:.25rem .5rem;border-radius:9999px;font-size:.75rem}
+.status-pending{background:rgba(245,158,11,.15);color:#fbbf24}
+.status-approved{background:rgba(22,163,74,.15);color:#34d399}
+.status-rejected{background:rgba(239,68,68,.15);color:#f87171}
+.status-completed{background:rgba(59,130,246,.15);color:#93c5fd}
+.welcome-card{border:1px solid rgba(255,255,255,.08)}
+.role-badge{width:48px;height:48px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--primary);color:#fff;font-weight:700}
+.metric-number{font-size:1.75rem;font-weight:700}
+.metric-label{font-size:.875rem;color:#9aa4b2}

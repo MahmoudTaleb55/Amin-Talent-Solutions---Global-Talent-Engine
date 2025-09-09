@@ -1,0 +1,221 @@
+<!-- Create Job Request Modal -->
+<div class="modal fade" id="createJobModal" tabindex="-1" aria-labelledby="createJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createJobModalLabel">Create Job Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createJobForm">
+                    <div class="mb-3">
+                        <label for="jobDescription" class="form-label">Job Description</label>
+                        <textarea class="form-control" id="jobDescription" rows="4" required
+                            placeholder="Describe the job requirements, deliverables, and any specific instructions..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="jobDeadline" class="form-label">Deadline</label>
+                        <input type="date" class="form-control" id="jobDeadline" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="jobStatus" class="form-label">Status</label>
+                        <select class="form-select" id="jobStatus">
+                            <option value="open">Open</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                    <div id="createJobError" class="alert alert-danger d-none"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submitJobBtn">Create Job Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Submit Deliverable Modal -->
+<div class="modal fade" id="submitDeliverableModal" tabindex="-1" aria-labelledby="submitDeliverableModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="submitDeliverableModalLabel">Submit Deliverable</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="submitDeliverableForm">
+                    <div class="mb-3">
+                        <label for="deliverableAssignment" class="form-label">Assignment</label>
+                        <select class="form-select" id="deliverableAssignment" required>
+                            <option value="">Select Assignment</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="deliverableContent" class="form-label">Deliverable Description</label>
+                        <textarea class="form-control" id="deliverableContent" rows="4" required
+                            placeholder="Describe what you're submitting..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="deliverableFile" class="form-label">Upload File (Optional)</label>
+                        <input type="file" class="form-control" id="deliverableFile" accept=".pdf,.doc,.docx,.zip,.jpg,.png">
+                        <div class="form-text">Supported formats: PDF, DOC, DOCX, ZIP, JPG, PNG (Max 10MB)</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="deliverableSubmittedOn" class="form-label">Submission Date</label>
+                        <input type="date" class="form-control" id="deliverableSubmittedOn" required>
+                    </div>
+                    <div id="submitDeliverableError" class="alert alert-danger d-none"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submitDeliverableBtn">Submit Deliverable</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Status Modal -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateStatusModalLabel">Update Assignment Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateStatusForm">
+                    <div class="mb-3">
+                        <label for="statusAssignment" class="form-label">Assignment</label>
+                        <select class="form-select" id="statusAssignment" required>
+                            <option value="">Select Assignment</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="statusUpdate" class="form-label">Status</label>
+                        <select class="form-select" id="statusUpdate" required>
+                            <option value="">Select Status</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Review Required">Review Required</option>
+                            <option value="Completed">Completed</option>
+                            <option value="On Hold">On Hold</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="statusNotes" class="form-label">Notes (Optional)</label>
+                        <textarea class="form-control" id="statusNotes" rows="3"
+                            placeholder="Add any notes about the current status..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="statusUpdatedOn" class="form-label">Update Date</label>
+                        <input type="date" class="form-control" id="statusUpdatedOn" required>
+                    </div>
+                    <div id="updateStatusError" class="alert alert-danger d-none"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="updateStatusBtn">Update Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assign Freelancer Modal -->
+<div class="modal fade" id="assignFreelancerModal" tabindex="-1" aria-labelledby="assignFreelancerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignFreelancerModalLabel">Assign Freelancer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="assignFreelancerForm">
+                    <input type="hidden" id="assignJobId">
+                    <div class="mb-3">
+                        <label for="assignFreelancer" class="form-label">Select Freelancer</label>
+                        <select class="form-select" id="assignFreelancer" required>
+                            <option value="">Select Freelancer</option>
+                        </select>
+                    </div>
+                    <div id="assignFreelancerError" class="alert alert-danger d-none"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="assignFreelancerBtn">Assign Freelancer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Job Request Modal -->
+<div class="modal fade" id="viewJobModal" tabindex="-1" aria-labelledby="viewJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewJobModalLabel">Job Request Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="jobDetailsContent">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary d-none" id="editJobBtn">Edit Job</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Assignment Modal -->
+<div class="modal fade" id="viewAssignmentModal" tabindex="-1" aria-labelledby="viewAssignmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewAssignmentModalLabel">Assignment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="assignmentDetailsContent">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success/Error Toast -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="successToastMessage">
+                Operation completed successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="errorToastMessage">
+                An error occurred!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
