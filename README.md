@@ -105,11 +105,3 @@ Suggested branching workflow
 
 CI and tests (suggested)
 - Add GitHub Actions to run `composer install`, `npm ci`, `npm run build`, and `php artisan test` on PRs to `main`. I can generate a starter workflow if you want.
-
-Next steps I can do for you
-- Create the GitHub repo and push (I will need your confirmation and/or remote URL)
-- Add a CI workflow (`.github/workflows/ci.yml`)
-- Add API documentation (OpenAPI/Swagger)
-- Add a LICENSE file (e.g., MIT)
-
-If you'd like, I can run the git commands now and push the repo — tell me whether you want to use `gh` (I will run `gh repo create`) or provide the remote URL to push to. If you prefer to handle the remote creation yourself, run the commands above.
