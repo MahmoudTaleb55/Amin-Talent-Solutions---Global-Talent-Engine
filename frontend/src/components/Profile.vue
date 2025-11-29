@@ -134,6 +134,13 @@
           Cancel
         </button>
       </div>
+      <div class="mt-4">
+        <div v-if="userRole === 'freelancer'" class="bg-white p-4 rounded border">
+          <h3 class="font-medium mb-2">Payments / Stripe Connect</h3>
+          <p class="text-sm text-secondary-600 mb-2">Create or connect your Stripe Express account so you can receive payouts.</p>
+          <button @click="createConnectAccount" class="px-4 py-2 bg-primary-600 text-white rounded">Create Connect Account</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -277,6 +284,20 @@ export default {
     cancel() {
       this.$router.back();
     },
+    createConnectAccount() {
+      api.payments.connect.create().then(r=>{
+        if (r.data && r.data.stripe_account_id) {
+          this.toast.success('Connected account created');
+          // refresh user
+          api.getUser().then(res=>{
+            // optionally update profileData
+            this.profileData = { ...this.profileData, ...{
+              stripe_account_id: res.data.stripe_account_id
+            }};
+          }).catch(()=>{});
+        }
+      }).catch(err=>{ this.toast.error('Failed to create connected account'); console.error(err); });
+    }
     getRoleBadgeClass(role) {
       const classes = {
         'admin': 'bg-purple-100 text-purple-800',

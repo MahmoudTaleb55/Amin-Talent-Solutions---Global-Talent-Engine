@@ -110,4 +110,14 @@ export default {
     update: (id, projectData) => apiClient.put(`/projects/${id}`, projectData),
     delete: (id) => apiClient.delete(`/projects/${id}`),
   },
+  // Payments / Connect
+  payments: {
+    createPaymentIntent: (invoiceId) => apiClient.post(`/payments/invoice/${invoiceId}/create-intent`),
+    webhook: (payload) => apiClient.post('/payments/webhook', payload),
+    simulate: (invoiceId) => apiClient.post(`/payments/test/invoice/${invoiceId}/simulate`),
+    connect: {
+      create: () => apiClient.post('/payments/connect/create'),
+      onboard: (userId) => apiClient.get(`/payments/connect/${userId}/onboard`)
+    }
+  },
 };
