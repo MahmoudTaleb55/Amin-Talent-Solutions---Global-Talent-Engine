@@ -41,6 +41,7 @@ class User extends Authenticatable
         'achievements',
         'years_experience',
         'hourly_rate',
+        'stripe_account_id',
     ];
 
     /**

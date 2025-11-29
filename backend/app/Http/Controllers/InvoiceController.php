@@ -87,6 +87,41 @@ class InvoiceController extends Controller
             ]);
         }
 
+        // If freelancer has a connected Stripe account, attempt to transfer funds
+        try {
+            $freelancer = \App\Models\User::find($invoice->freelancer_id);
+            if ($freelancer && $freelancer->stripe_account_id) {
+                $secret = env('STRIPE_SECRET');
+                if ($secret) {
+                    $stripe = new \Stripe\StripeClient($secret);
+                    $amount = (int) round($invoice->amount * 100);
+                    $transfer = $stripe->transfers->create([
+                        'amount' => $amount,
+                        'currency' => strtolower($invoice->currency ?? 'usd'),
+                        'destination' => $freelancer->stripe_account_id,
+                        'metadata' => ['invoice_id' => $invoice->id]
+                    ]);
+
+                    if (class_exists('\App\Models\AuditLog')) {
+                        \App\Models\AuditLog::create([
+                            'user_id' => $user->id,
+                            'action' => 'invoice_transfer_created',
+                            'meta' => ['invoice_id' => $invoice->id, 'transfer' => $transfer]
+                        ]);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Log failure but don't block response
+            if (class_exists('\App\Models\AuditLog')) {
+                \App\Models\AuditLog::create([
+                    'user_id' => $user->id,
+                    'action' => 'invoice_transfer_failed',
+                    'meta' => ['invoice_id' => $invoice->id, 'error' => $e->getMessage()]
+                ]);
+            }
+        }
+
         return response()->json(['message' => 'Funds released', 'invoice' => $invoice]);
     }
 }

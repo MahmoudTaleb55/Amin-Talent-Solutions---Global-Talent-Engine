@@ -93,6 +93,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('payments/webhook', [\App\Http\Controllers\PaymentController::class, 'webhook']);
     // Admin-only simulation endpoint to mark an invoice as paid (for local testing without Stripe CLI)
     Route::post('payments/test/invoice/{id}/simulate', [\App\Http\Controllers\PaymentController::class, 'simulateWebhook'])->middleware('role:admin');
+    // Connect / onboarding
+    Route::post('payments/connect/create', [\App\Http\Controllers\PaymentController::class, 'createConnectedAccount']);
+    Route::get('payments/connect/{userId}/onboard', [\App\Http\Controllers\PaymentController::class, 'createAccountLink']);
 
     // Portfolio
     Route::get('portfolios', [\App\Http\Controllers\PortfolioController::class, 'index']);

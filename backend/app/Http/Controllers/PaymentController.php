@@ -32,6 +32,72 @@ class PaymentController extends Controller
         return response()->json(['clientSecret' => $paymentIntent->client_secret]);
     }
 
+    // Create a connected account for the authenticated user (freelancer onboarding)
+    public function createConnectedAccount(Request $request)
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Only freelancers can create connected accounts in this flow
+        if (!$user->hasRole('freelancer')) {
+            return response()->json(['error' => 'Only freelancers may create connected accounts'], 403);
+        }
+
+        $stripe = $this->stripe();
+        try {
+            $acct = $stripe->accounts->create([
+                'type' => 'express',
+                'email' => $user->email,
+                'business_type' => 'individual'
+            ]);
+
+            $user->stripe_account_id = $acct->id;
+            $user->save();
+
+            if (class_exists('\App\Models\AuditLog')) {
+                \App\Models\AuditLog::create([
+                    'user_id' => $user->id,
+                    'action' => 'create_connected_account',
+                    'meta' => ['stripe_account_id' => $acct->id]
+                ]);
+            }
+
+            return response()->json(['stripe_account_id' => $acct->id]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    // Create an account link for onboarding (admin or owner can request)
+    public function createAccountLink(Request $request, $userId)
+    {
+        $requesting = $request->user();
+        if (!$requesting || !($requesting->hasRole('admin') || $requesting->id == $userId)) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $user = \App\Models\User::findOrFail($userId);
+        if (!$user->stripe_account_id) {
+            return response()->json(['error' => 'User has no stripe account id'], 400);
+        }
+
+        $stripe = $this->stripe();
+        try {
+            $link = $stripe->accountLinks->create([
+                'account' => $user->stripe_account_id,
+                'refresh_url' => url('/'),
+                'return_url' => url('/'),
+                'type' => 'account_onboarding',
+            ]);
+
+            return response()->json(['url' => $link->url]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function webhook(Request $request)
     {
         $payload = $request->getContent();
