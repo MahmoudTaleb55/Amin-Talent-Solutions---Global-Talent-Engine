@@ -91,6 +91,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Payments / Stripe
     Route::post('payments/invoice/{id}/create-intent', [\App\Http\Controllers\PaymentController::class, 'createPaymentIntent']);
     Route::post('payments/webhook', [\App\Http\Controllers\PaymentController::class, 'webhook']);
+    // Admin-only simulation endpoint to mark an invoice as paid (for local testing without Stripe CLI)
+    Route::post('payments/test/invoice/{id}/simulate', [\App\Http\Controllers\PaymentController::class, 'simulateWebhook'])->middleware('role:admin');
 
     // Portfolio
     Route::get('portfolios', [\App\Http\Controllers\PortfolioController::class, 'index']);

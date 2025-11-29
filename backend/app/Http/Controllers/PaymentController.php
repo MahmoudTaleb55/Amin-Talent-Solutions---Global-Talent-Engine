@@ -67,4 +67,30 @@ class PaymentController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
+    // Admin-only helper to simulate a payment_intent.succeeded event for testing
+    public function simulateWebhook(Request $request, $invoiceId)
+    {
+        if (!auth()->user() || !auth()->user()->hasRole('admin')) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $invoice = Invoice::find($invoiceId);
+        if (!$invoice) {
+            return response()->json(['error' => 'Invoice not found'], 404);
+        }
+
+        $invoice->status = 'paid';
+        $invoice->save();
+
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => auth()->id() ?? null,
+                'action' => 'simulate_payment_succeeded',
+                'meta' => ['invoice_id' => $invoice->id]
+            ]);
+        }
+
+        return response()->json(['status' => 'simulated', 'invoice' => $invoice]);
+    }
 }
