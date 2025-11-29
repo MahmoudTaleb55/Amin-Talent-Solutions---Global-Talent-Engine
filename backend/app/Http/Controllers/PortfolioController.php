@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Portfolio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PortfolioController extends Controller
 {
@@ -36,6 +37,30 @@ class PortfolioController extends Controller
         ]);
 
         return response()->json($portfolio, 201);
+    }
+
+    public function uploadAttachment(Request $request, $id)
+    {
+        $portfolio = Portfolio::findOrFail($id);
+        $this->authorize('update', $portfolio);
+
+        $request->validate([
+            'file' => 'required|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx,txt,zip|max:10240',
+        ]);
+
+        $file = $request->file('file');
+        $path = $file->store('portfolios', 'public');
+
+        $attachments = $portfolio->attachments ?? [];
+        if (!is_array($attachments)) {
+            $attachments = json_decode($attachments, true) ?: [];
+        }
+
+        $attachments[] = Storage::url($path);
+        $portfolio->attachments = $attachments;
+        $portfolio->save();
+
+        return response()->json(['path' => Storage::url($path), 'portfolio' => $portfolio]);
     }
 
     public function destroy(Request $request, $id)

@@ -16,6 +16,7 @@ const UserManagement = () => import(/* webpackChunkName: "admin-users" */ '../co
 const RoleManagement = () => import(/* webpackChunkName: "admin-roles" */ '../components/pages/RoleManagement.vue');
 const Invoices = () => import(/* webpackChunkName: "invoices" */ '../components/pages/Invoices.vue');
 const Portfolio = () => import(/* webpackChunkName: "portfolio" */ '../components/pages/Portfolio.vue');
+const AdminPaymentSettings = () => import(/* webpackChunkName: "admin-payments" */ '../components/pages/AdminPaymentSettings.vue');
 
 
 const routes = [
@@ -97,6 +98,12 @@ const routes = [
         path: 'admin/roles',
         name: 'RoleManagement',
         component: RoleManagement,
+        meta: { role: 'admin' }
+      }
+      ,{
+        path: 'admin/payment-settings',
+        name: 'AdminPaymentSettings',
+        component: AdminPaymentSettings,
         meta: { role: 'admin' }
       }
       ,{

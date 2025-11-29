@@ -16,9 +16,22 @@
             <div class="font-medium">{{ it.title }}</div>
             <div class="text-sm text-secondary-600">{{ it.description }}</div>
             <a v-if="it.url" :href="it.url" target="_blank" class="text-sm text-primary-600">Open link</a>
+            <div v-if="it.attachments && it.attachments.length" class="mt-2">
+              <div v-for="(a, idx) in it.attachments" :key="idx">
+                <a :href="a" target="_blank" class="text-sm text-primary-600">Attachment {{ idx + 1 }}</a>
+              </div>
+            </div>
           </div>
           <div>
-            <button @click="remove(it.id)" class="px-3 py-1 bg-danger-600 text-white rounded">Delete</button>
+            <div class="space-y-2">
+              <div>
+                <input type="file" :ref="`file-${it.id}`" @change="selectFile($event, it.id)" />
+                <button @click="uploadAttachment(it.id)" class="ml-2 px-3 py-1 bg-primary-600 text-white rounded">Upload</button>
+              </div>
+              <div>
+                <button @click="remove(it.id)" class="px-3 py-1 bg-danger-600 text-white rounded">Delete</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -34,7 +47,21 @@ export default {
   methods: {
     load() { api.get('/portfolios').then(r=>this.items=r.data).catch(()=>{}); },
     create() { api.post('/portfolios', this.form).then(()=>{ this.form={title:'',description:'',url:''}; this.load(); }); },
-    remove(id) { api.delete(`/portfolios/${id}`).then(()=>this.load()); }
+    remove(id) { api.delete(`/portfolios/${id}`).then(()=>this.load()); },
+    selectFile(e, id) {
+      const file = e.target.files[0];
+      if (!file) return;
+      this.$set(this, `selectedFile_${id}`, file);
+    },
+    uploadAttachment(id) {
+      const file = this[`selectedFile_${id}`];
+      if (!file) { alert('Select a file first'); return; }
+      const formData = new FormData();
+      formData.append('file', file);
+      api.post(`/portfolios/${id}/attachments`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+        .then(()=>{ this.load(); delete this[`selectedFile_${id}`]; })
+        .catch(()=>{ alert('Upload failed'); });
+    }
   }
 }
 </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Freelancer;
+use App\Models\PaymentSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -100,5 +101,45 @@ class AdminController extends Controller
         ];
 
         return response()->json($stats);
+    }
+
+    // Payment settings (admin)
+    public function getPaymentSettings()
+    {
+        $settings = PaymentSetting::all()->pluck('value', 'key');
+        return response()->json($settings);
+    }
+
+    public function savePaymentSettings(Request $request)
+    {
+        $request->validate([
+            'stripe_secret' => 'nullable|string',
+            'stripe_publishable_key' => 'nullable|string',
+            'stripe_webhook_secret' => 'nullable|string',
+        ]);
+
+        $keys = [
+            'stripe_secret' => $request->input('stripe_secret'),
+            'stripe_publishable_key' => $request->input('stripe_publishable_key'),
+            'stripe_webhook_secret' => $request->input('stripe_webhook_secret'),
+        ];
+
+        foreach ($keys as $k => $v) {
+            if (is_null($v)) {
+                continue;
+            }
+            PaymentSetting::updateOrCreate(['key' => $k], ['value' => $v]);
+        }
+
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => auth()->id() ?? null,
+                'action' => 'admin_updated_payment_settings',
+                'meta' => ['keys' => array_keys(array_filter($keys))]
+            ]);
+        }
+
+        $settings = PaymentSetting::all()->pluck('value', 'key');
+        return response()->json($settings);
     }
 }

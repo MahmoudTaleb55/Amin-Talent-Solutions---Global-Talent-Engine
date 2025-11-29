@@ -45,6 +45,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('admin/users/{id}', [AdminController::class, 'updateUser']);
         Route::delete('admin/users/{id}', [AdminController::class, 'deleteUser']);
         Route::get('admin/stats', [AdminController::class, 'getSystemStats']);
+        // Payment settings (admin)
+        Route::get('admin/payment-settings', [AdminController::class, 'getPaymentSettings']);
+        Route::put('admin/payment-settings', [AdminController::class, 'savePaymentSettings']);
     });
 
     // CEO Routes
@@ -92,5 +95,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Portfolio
     Route::get('portfolios', [\App\Http\Controllers\PortfolioController::class, 'index']);
     Route::post('portfolios', [\App\Http\Controllers\PortfolioController::class, 'store']);
+    Route::post('portfolios/{id}/attachments', [\App\Http\Controllers\PortfolioController::class, 'uploadAttachment']);
     Route::delete('portfolios/{id}', [\App\Http\Controllers\PortfolioController::class, 'destroy']);
 });
