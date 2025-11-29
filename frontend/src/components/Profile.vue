@@ -119,8 +119,8 @@
         <p class="text-sm text-secondary-600 mb-4">Upload a plain-text or Markdown resume to autofill basic fields (name, email, phone, skills).</p>
         <div>
           <label class="cursor-pointer inline-flex items-center gap-3 px-4 py-2 border border-secondary-300 rounded-lg hover:bg-secondary-50">
-            <input type="file" accept=".txt,.md" @change="handleResumeUpload" class="hidden" />
-            <span class="text-secondary-700 font-medium">Upload Resume</span>
+            <input type="file" accept=".pdf,.doc,.docx,.txt,.md" @change="handleResumeUpload" class="hidden" />
+            <span class="text-secondary-700 font-medium">Upload Resume (PDF/DOC/TXT)</span>
           </label>
         </div>
       </div>
@@ -140,6 +140,7 @@
 
 <script>
 import { useToast } from 'vue-toastification';
+import api from '@/services/api';
 
 export default {
   name: 'UserProfile',
@@ -168,6 +169,30 @@ export default {
   },
   mounted() {
     this.loadProfile();
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      api.getUser().then(res => {
+        if (res && res.data) {
+          const user = res.data;
+          this.profileData = {
+            ...this.profileData,
+            name: user.name || this.profileData.name,
+            email: user.email || this.profileData.email,
+            bio: user.bio || this.profileData.bio,
+            avatar: user.avatar || this.profileData.avatar,
+            yearsExperience: user.years_experience || this.profileData.yearsExperience,
+            hourlyRate: user.hourly_rate || this.profileData.hourlyRate,
+            skills: user.skills || this.profileData.skills,
+            achievements: user.achievements ? JSON.parse(user.achievements || '[]') : this.profileData.achievements,
+            phone: user.phone || this.profileData.phone,
+            location: user.location || this.profileData.location,
+            linkedinUrl: user.linkedin_url || this.profileData.linkedinUrl,
+            website: user.website || this.profileData.website
+          };
+          localStorage.setItem('userProfile', JSON.stringify(this.profileData));
+        }
+      }).catch(() => {});
+    }
   },
   methods: {
     loadProfile() {
@@ -181,36 +206,37 @@ export default {
     handleAvatarUpload(event) {
       const file = event.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.profileData.avatar = e.target.result;
-          this.toast.success('Photo uploaded');
-        };
-        reader.readAsDataURL(file);
+        const form = new FormData();
+        form.append('avatar', file);
+        api.post('/profile/avatar', form, { headers: { 'Content-Type': 'multipart/form-data' } })
+          .then(res => {
+            if (res && res.data && res.data.avatar) {
+              this.profileData.avatar = res.data.avatar;
+              localStorage.setItem('userProfile', JSON.stringify(this.profileData));
+              this.toast.success('Photo uploaded');
+            }
+          }).catch(err => {
+            console.error('Avatar upload failed', err);
+            this.toast.error('Photo upload failed');
+          });
       }
     },
     handleResumeUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target.result;
-        try {
-          const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-          if (emailMatch) this.profileData.email = emailMatch[0];
-          const phoneMatch = text.match(/\+?\d[\d\s()-]{7,}\d/);
-          if (phoneMatch) this.profileData.phone = phoneMatch[0];
-          const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-          if (lines.length && !this.profileData.name) this.profileData.name = lines[0];
-          const skillsMatch = text.match(/skills(?::|-)\s*(.+)/i);
-          if (skillsMatch) this.profileData.skills = skillsMatch[1].replace(/\s+/g, ' ');
-          this.toast.success('Resume imported — review fields before saving');
-        } catch (err) {
-          console.error('Resume parse error', err);
-          this.toast.error('Failed to parse resume');
-        }
-      };
-      reader.readAsText(file);
+      const form = new FormData();
+      form.append('resume', file);
+      api.post('/profile/resume', form, { headers: { 'Content-Type': 'multipart/form-data' } })
+        .then(res => {
+          if (res && res.data && res.data.resume) {
+            this.profileData.resume = res.data.resume;
+            localStorage.setItem('userProfile', JSON.stringify(this.profileData));
+            this.toast.success('Resume uploaded — review fields before saving');
+          }
+        }).catch(err => {
+          console.error('Resume upload failed', err);
+          this.toast.error('Resume upload failed');
+        });
     },
     addAchievement() {
       this.profileData.achievements.push('');
@@ -221,12 +247,26 @@ export default {
     async saveProfile() {
       this.saving = true;
       try {
-        // Save to localStorage for now (would integrate with backend API)
+        // Send profile fields to backend
+        const payload = {
+          name: this.profileData.name,
+          bio: this.profileData.bio,
+          years_experience: this.profileData.yearsExperience,
+          hourly_rate: this.profileData.hourlyRate,
+          skills: this.profileData.skills,
+          achievements: this.profileData.achievements,
+          phone: this.profileData.phone,
+          location: this.profileData.location,
+          linkedin_url: this.profileData.linkedinUrl,
+          website: this.profileData.website
+        };
+
+        await api.put('/profile', payload);
         localStorage.setItem('userProfile', JSON.stringify(this.profileData));
         this.toast.success('Profile updated successfully');
         setTimeout(() => {
           this.$router.back();
-        }, 1500);
+        }, 1200);
       } catch (error) {
         console.error('Error saving profile:', error);
         this.toast.error('Failed to save profile');

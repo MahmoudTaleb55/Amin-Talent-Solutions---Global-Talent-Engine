@@ -2,11 +2,8 @@
   <header class="w-full bg-white border-b border-secondary-100 transition-colors">
     <div class="container flex items-center justify-between h-16">
       <router-link to="/dashboard" class="flex items-center space-x-2">
-        <img src="/assets/logo.png" alt="Amin Talent Solutions" class="h-10 w-auto object-contain" />
-        <div class="hidden sm:block">
-          <div class="text-sm font-bold text-secondary-900">Amin Talent</div>
-          <div class="text-xs text-secondary-500">Solutions</div>
-        </div>
+        <!-- Minimal brand: no purple logo or 'Amin Talent' text per request -->
+        <div class="text-sm font-semibold text-secondary-900">Talent Engine</div>
       </router-link>
 
       <nav class="flex items-center space-x-4">
@@ -16,17 +13,17 @@
           <router-link to="/register" class="ml-2 btn btn-primary btn-sm">Sign up</router-link>
         </template>
 
-        <!-- Authenticated Navigation -->
+        <!-- Authenticated Navigation: show avatar + dropdown -->
         <template v-else>
-          <div class="flex items-center space-x-3">
-            <!-- User Role Display -->
-            <span class="text-sm text-secondary-700 capitalize bg-secondary-100 px-3 py-1 rounded-full">{{ userRole }}</span>
-            
-            <!-- Profile Link -->
-            <router-link to="/profile" class="text-sm text-secondary-700 hover:text-primary-600">Profile</router-link>
-            
-            <!-- Logout Button -->
-            <button @click="handleLogout" class="text-sm btn btn-secondary btn-sm">Logout</button>
+          <div class="relative" @click.outside="closeDropdown">
+            <button @click="toggleDropdown" class="flex items-center gap-2 focus:outline-none">
+              <img :src="avatarSrc" alt="Profile" class="h-9 w-9 rounded-full object-cover border" />
+            </button>
+            <div v-if="dropdownOpen" class="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg py-2 z-50">
+              <router-link to="/profile" class="block px-4 py-2 text-sm text-secondary-700 hover:bg-secondary-50">Profile</router-link>
+              <router-link to="/dashboard" class="block px-4 py-2 text-sm text-secondary-700 hover:bg-secondary-50">Dashboard</router-link>
+              <button @click="handleLogout" class="w-full text-left px-4 py-2 text-sm text-secondary-700 hover:bg-secondary-50">Logout</button>
+            </div>
           </div>
         </template>
       </nav>
@@ -48,6 +45,8 @@ export default {
     return {
       isAuthenticated: false,
       userRole: ''
+      ,dropdownOpen: false,
+      avatarSrc: '/assets/default-avatar.png'
     };
   },
   mounted() {
@@ -64,6 +63,24 @@ export default {
       const role = localStorage.getItem('userRole');
       this.isAuthenticated = !!token;
       this.userRole = role || '';
+      // load avatar from cached profile if present
+      const profile = localStorage.getItem('userProfile');
+      if (profile) {
+        try {
+          const p = JSON.parse(profile);
+          this.avatarSrc = p.avatar || '/assets/default-avatar.png';
+        } catch (e) {
+          this.avatarSrc = '/assets/default-avatar.png';
+        }
+      } else {
+        this.avatarSrc = '/assets/default-avatar.png';
+      }
+    },
+    toggleDropdown() {
+      this.dropdownOpen = !this.dropdownOpen;
+    },
+    closeDropdown() {
+      this.dropdownOpen = false;
     },
     async handleLogout() {
       try {

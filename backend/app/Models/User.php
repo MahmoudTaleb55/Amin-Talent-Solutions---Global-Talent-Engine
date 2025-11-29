@@ -29,6 +29,18 @@ class User extends Authenticatable
         'email',
         'password',
         'role', // legacy enum; will be deprecated after full migration to Spatie
+        // profile fields
+        'avatar',
+        'resume',
+        'bio',
+        'phone',
+        'location',
+        'linkedin_url',
+        'website',
+        'skills',
+        'achievements',
+        'years_experience',
+        'hourly_rate',
     ];
 
     /**

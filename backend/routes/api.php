@@ -73,4 +73,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('project/reports', [ProjectManagerController::class, 'getProjectReports']);
         Route::get('project/team-performance', [ProjectManagerController::class, 'getTeamPerformance']);
     });
+
+    // Profile routes
+    Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update']);
+    Route::post('profile/avatar', [\App\Http\Controllers\ProfileController::class, 'uploadAvatar']);
+    Route::post('profile/resume', [\App\Http\Controllers\ProfileController::class, 'uploadResume']);
 });

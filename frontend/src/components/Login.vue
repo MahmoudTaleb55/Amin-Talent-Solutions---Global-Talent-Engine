@@ -112,6 +112,12 @@ export default {
         localStorage.setItem('authToken', token);
         localStorage.setItem('userRole', userRole);
         localStorage.setItem('userEmail', user.email);
+        // Cache user profile for header/avatar
+        localStorage.setItem('userProfile', JSON.stringify({
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar || null
+        }));
 
         // Emit event for Header to update
         this.$root.$emit('auth-changed');

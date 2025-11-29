@@ -154,8 +154,14 @@ export default {
         localStorage.setItem('authToken', response.data.access_token);
         localStorage.setItem('userRole', this.form.role);
         localStorage.setItem('userEmail', this.form.email);
+        // Cache basic profile from registration response
+        localStorage.setItem('userProfile', JSON.stringify({
+          name: this.form.name,
+          email: this.form.email,
+          avatar: response.data.user?.avatar || null
+        }));
         
-        this.toast.success('✅ Registration successful! Welcome to Amin Talent Solutions!');
+        this.toast.success('✅ Registration successful! Welcome!');
         
         setTimeout(() => {
           this.$root.$emit('auth-changed');
