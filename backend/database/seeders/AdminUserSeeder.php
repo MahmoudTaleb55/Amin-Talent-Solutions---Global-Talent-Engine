@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class AdminUserSeeder extends Seeder
 {
@@ -14,6 +15,12 @@ class AdminUserSeeder extends Seeder
      */
     public function run()
     {
+        // Ensure roles exist
+        $roles = ['admin','ceo','project_manager','company','freelancer'];
+        foreach ($roles as $r) {
+            Role::firstOrCreate(['name' => $r]);
+        }
+
         // Create users for all roles
         User::create([
             'name' => 'Admin User',
