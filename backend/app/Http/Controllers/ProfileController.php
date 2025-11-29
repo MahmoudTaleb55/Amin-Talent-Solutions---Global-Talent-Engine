@@ -23,6 +23,14 @@ class ProfileController extends Controller
         $user->fill($data);
         $user->save();
 
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => $user->id,
+                'action' => 'profile_updated',
+                'meta' => []
+            ]);
+        }
+
         return response()->json(['message' => 'Profile updated', 'user' => $user]);
     }
 
@@ -44,6 +52,14 @@ class ProfileController extends Controller
         $user->avatar = $url;
         $user->save();
 
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => $user->id,
+                'action' => 'avatar_uploaded',
+                'meta' => ['avatar' => $url]
+            ]);
+        }
+
         return response()->json(['message' => 'Avatar uploaded', 'avatar' => $url]);
     }
 
@@ -64,6 +80,14 @@ class ProfileController extends Controller
 
         $user->resume = $url;
         $user->save();
+
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => $user->id,
+                'action' => 'resume_uploaded',
+                'meta' => ['resume' => $url]
+            ]);
+        }
 
         return response()->json(['message' => 'Resume uploaded', 'resume' => $url]);
     }

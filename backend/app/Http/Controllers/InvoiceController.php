@@ -68,8 +68,24 @@ class InvoiceController extends Controller
     public function releaseFunds(Request $request, $id)
     {
         $invoice = Invoice::findOrFail($id);
+
+        // Authorization: only admin, ceo, or the company who owns the invoice can release
+        $user = $request->user();
+        if (!($user->hasRole('admin') || $user->hasRole('ceo') || $invoice->company_id == $user->id)) {
+            return response()->json(['message' => 'Unauthorized to release funds'], 403);
+        }
+
         $invoice->status = 'released';
         $invoice->save();
+
+        // Audit
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => $user->id,
+                'action' => 'invoice_released',
+                'meta' => ['invoice_id' => $invoice->id]
+            ]);
+        }
 
         return response()->json(['message' => 'Funds released', 'invoice' => $invoice]);
     }

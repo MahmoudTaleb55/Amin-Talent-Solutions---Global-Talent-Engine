@@ -45,6 +45,14 @@ class AdminController extends Controller
             ]);
         }
 
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => auth()->id() ?? null,
+                'action' => 'admin_user_created',
+                'meta' => ['created_user_id' => $user->id]
+            ]);
+        }
+
         return response()->json($user->load(['company', 'freelancer']), 201);
     }
 
@@ -71,6 +79,13 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => auth()->id() ?? null,
+                'action' => 'admin_user_deleted',
+                'meta' => ['deleted_user_id' => $id]
+            ]);
+        }
         return response()->json(['message' => 'User deleted']);
     }
 

@@ -42,6 +42,15 @@ class AuthController extends Controller
             // Generate token just like login
             $token = $user->createToken('auth_token')->plainTextToken;
 
+            // Audit log
+            if (class_exists('\App\Models\AuditLog')) {
+                \App\Models\AuditLog::create([
+                    'user_id' => $user->id,
+                    'action' => 'user_registered',
+                    'meta' => ['email' => $user->email]
+                ]);
+            }
+
             return response()->json([
                 'message' => 'User registered successfully!',
                 'access_token' => $token,
@@ -78,6 +87,15 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Audit
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => $user->id,
+                'action' => 'user_logged_in',
+                'meta' => ['email' => $user->email]
+            ]);
+        }
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
@@ -94,6 +112,14 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
+
+        if (class_exists('\App\Models\AuditLog')) {
+            \App\Models\AuditLog::create([
+                'user_id' => $request->user()->id,
+                'action' => 'user_logged_out',
+                'meta' => []
+            ]);
+        }
 
         return response()->json(['message' => 'Successfully logged out']);
     }

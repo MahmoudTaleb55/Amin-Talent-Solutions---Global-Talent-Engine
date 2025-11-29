@@ -85,6 +85,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('invoices/{id}/paid', [\App\Http\Controllers\InvoiceController::class, 'markPaid']);
     Route::post('invoices/{id}/release', [\App\Http\Controllers\InvoiceController::class, 'releaseFunds']);
 
+    // Payments / Stripe
+    Route::post('payments/invoice/{id}/create-intent', [\App\Http\Controllers\PaymentController::class, 'createPaymentIntent']);
+    Route::post('payments/webhook', [\App\Http\Controllers\PaymentController::class, 'webhook']);
+
     // Portfolio
     Route::get('portfolios', [\App\Http\Controllers\PortfolioController::class, 'index']);
     Route::post('portfolios', [\App\Http\Controllers\PortfolioController::class, 'store']);
