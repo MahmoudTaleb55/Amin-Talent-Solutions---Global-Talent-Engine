@@ -78,4 +78,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update']);
     Route::post('profile/avatar', [\App\Http\Controllers\ProfileController::class, 'uploadAvatar']);
     Route::post('profile/resume', [\App\Http\Controllers\ProfileController::class, 'uploadResume']);
+
+    // Invoice routes
+    Route::get('invoices', [\App\Http\Controllers\InvoiceController::class, 'index']);
+    Route::post('projects/{projectId}/invoice', [\App\Http\Controllers\InvoiceController::class, 'createForProject']);
+    Route::post('invoices/{id}/paid', [\App\Http\Controllers\InvoiceController::class, 'markPaid']);
+    Route::post('invoices/{id}/release', [\App\Http\Controllers\InvoiceController::class, 'releaseFunds']);
+
+    // Portfolio
+    Route::get('portfolios', [\App\Http\Controllers\PortfolioController::class, 'index']);
+    Route::post('portfolios', [\App\Http\Controllers\PortfolioController::class, 'store']);
+    Route::delete('portfolios/{id}', [\App\Http\Controllers\PortfolioController::class, 'destroy']);
 });

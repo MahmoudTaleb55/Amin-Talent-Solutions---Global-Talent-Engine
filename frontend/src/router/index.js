@@ -14,6 +14,8 @@ const ProfileCardDemo = () => import(/* webpackChunkName: "profile-demo" */ '../
 const Profile = () => import(/* webpackChunkName: "profile" */ '../components/Profile.vue');
 const UserManagement = () => import(/* webpackChunkName: "admin-users" */ '../components/pages/UserManagement.vue');
 const RoleManagement = () => import(/* webpackChunkName: "admin-roles" */ '../components/pages/RoleManagement.vue');
+const Invoices = () => import(/* webpackChunkName: "invoices" */ '../components/pages/Invoices.vue');
+const Portfolio = () => import(/* webpackChunkName: "portfolio" */ '../components/pages/Portfolio.vue');
 
 
 const routes = [
@@ -96,6 +98,16 @@ const routes = [
         name: 'RoleManagement',
         component: RoleManagement,
         meta: { role: 'admin' }
+      }
+      ,{
+        path: 'invoices',
+        name: 'Invoices',
+        component: Invoices
+      }
+      ,{
+        path: 'portfolio',
+        name: 'Portfolio',
+        component: Portfolio
       }
     ]
   }
