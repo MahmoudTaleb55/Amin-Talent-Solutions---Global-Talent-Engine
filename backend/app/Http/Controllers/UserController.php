@@ -10,10 +10,14 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if ($request->has('role')) {
-            $users = User::role($request->role)->get();
+            $users = User::role($request->role)->with('roles')->get();
             return response()->json($users);
         }
 
-        return response()->json(User::all());
+        $users = User::with('roles')->get()->map(function($u) {
+            return array_merge($u->toArray(), ['stripe_account_id' => $u->stripe_account_id ?? null]);
+        });
+
+        return response()->json($users);
     }
 }

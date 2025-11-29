@@ -70,6 +70,41 @@ class PaymentController extends Controller
         }
     }
 
+    // Admin: create connected account for any user
+    public function createConnectedAccountForUser(Request $request, $userId)
+    {
+        $admin = $request->user();
+        if (!$admin || !$admin->hasRole('admin')) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $user = \App\Models\User::findOrFail($userId);
+
+        $stripe = $this->stripe();
+        try {
+            $acct = $stripe->accounts->create([
+                'type' => 'express',
+                'email' => $user->email,
+                'business_type' => 'individual'
+            ]);
+
+            $user->stripe_account_id = $acct->id;
+            $user->save();
+
+            if (class_exists('\App\Models\AuditLog')) {
+                \App\Models\AuditLog::create([
+                    'user_id' => $admin->id,
+                    'action' => 'admin_created_connected_account',
+                    'meta' => ['target_user_id' => $user->id, 'stripe_account_id' => $acct->id]
+                ]);
+            }
+
+            return response()->json(['stripe_account_id' => $acct->id]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     // Create an account link for onboarding (admin or owner can request)
     public function createAccountLink(Request $request, $userId)
     {

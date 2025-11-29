@@ -96,6 +96,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Connect / onboarding
     Route::post('payments/connect/create', [\App\Http\Controllers\PaymentController::class, 'createConnectedAccount']);
     Route::get('payments/connect/{userId}/onboard', [\App\Http\Controllers\PaymentController::class, 'createAccountLink']);
+    // Admin create connected account for specific user
+    Route::post('payments/connect/{userId}/create', [\App\Http\Controllers\PaymentController::class, 'createConnectedAccountForUser'])->middleware('role:admin');
 
     // Portfolio
     Route::get('portfolios', [\App\Http\Controllers\PortfolioController::class, 'index']);

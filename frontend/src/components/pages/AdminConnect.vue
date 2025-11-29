@@ -12,6 +12,7 @@
         <div class="space-x-2">
           <button v-if="user.stripe_account_id" @click="openOnboard(user.id)" class="px-3 py-1 bg-primary-600 text-white rounded">Open Onboard</button>
           <button v-else @click="createOnboard(user.id)" class="px-3 py-1 bg-primary-600 text-white rounded">Create Onboard</button>
+          <button v-if="!user.stripe_account_id" @click="adminCreate(user.id)" class="px-3 py-1 bg-secondary-600 text-white rounded">Create Account (Admin)</button>
         </div>
       </div>
     </div>
@@ -37,6 +38,12 @@ export default {
         if (url) window.open(url, '_blank');
       }).catch(err=>{ alert('Failed to create onboarding link'); console.error(err); });
     },
+      adminCreate(userId) {
+        api.post(`/payments/connect/${userId}/create`).then(r=>{
+          alert('Connected account created');
+          this.load();
+        }).catch(err=>{ alert('Failed to create connected account'); console.error(err); });
+      },
     openOnboard(userId) {
       // If already connected, still try to create account link to manage account
       api.payments.connect.onboard(userId).then(r=>{
