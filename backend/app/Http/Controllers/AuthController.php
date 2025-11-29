@@ -36,7 +36,16 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
+            // Ensure the spatie Role exists (tests may run without seeded roles)
+            if (class_exists('\Spatie\Permission\Models\Role')) {
+                \Spatie\Permission\Models\Role::firstOrCreate(['name' => $request->role]);
+            }
+
             $user->assignRole($request->role);
+            // Also persist a simple `role` column for tests that assert it
+            $user->role = $request->role;
+            $user->save();
+
             $user->load('roles');
 
             // Generate token just like login

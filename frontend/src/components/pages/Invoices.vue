@@ -22,6 +22,7 @@
 <script>
 import api from '@/services/api';
 export default {
+  name: 'InvoicesPage',
   data() {
     return { invoices: [] };
   },

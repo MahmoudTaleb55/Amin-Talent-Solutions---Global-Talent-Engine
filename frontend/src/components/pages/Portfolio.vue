@@ -42,6 +42,7 @@
 <script>
 import api from '@/services/api';
 export default {
+  name: 'PortfolioPage',
   data() { return { items: [], form: { title: '', description: '', url: '' } }; },
   mounted() { this.load(); },
   methods: {

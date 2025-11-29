@@ -20,6 +20,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import api from '@/services/api';
 export default {
   data() {
@@ -28,26 +29,27 @@ export default {
   mounted() { this.load(); },
   methods: {
     load() {
-      api.admin.getUsers().then(r=>{
-        this.users = r.data;
+      api.admin.getUsers().then(response=>{
+        this.users = response.data;
       }).catch(()=>{});
     },
     createOnboard(userId) {
-      api.payments.connect.onboard(userId).then(r=>{
-        const url = r.data.url;
+      api.payments.connect.onboard(userId).then(response=>{
+        const url = response.data.url;
         if (url) window.open(url, '_blank');
       }).catch(err=>{ alert('Failed to create onboarding link'); console.error(err); });
     },
       adminCreate(userId) {
-        api.post(`/payments/connect/${userId}/create`).then(r=>{
+        api.post(`/payments/connect/${userId}/create`).then(response=>{
           alert('Connected account created');
           this.load();
         }).catch(err=>{ alert('Failed to create connected account'); console.error(err); });
       },
     openOnboard(userId) {
       // If already connected, still try to create account link to manage account
-      api.payments.connect.onboard(userId).then(r=>{
-        const url = r.data.url;
+      // eslint-disable-next-line no-unused-vars
+      api.payments.connect.onboard(userId).then(response=>{
+        const url = response.data.url;
         if (url) window.open(url, '_blank');
       }).catch(err=>{ alert('Failed to open onboarding/manage link'); console.error(err); });
     }

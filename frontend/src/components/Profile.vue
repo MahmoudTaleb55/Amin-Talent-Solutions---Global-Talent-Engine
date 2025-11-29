@@ -297,7 +297,7 @@ export default {
           }).catch(()=>{});
         }
       }).catch(err=>{ this.toast.error('Failed to create connected account'); console.error(err); });
-    }
+    },
     getRoleBadgeClass(role) {
       const classes = {
         'admin': 'bg-purple-100 text-purple-800',

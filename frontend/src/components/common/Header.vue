@@ -15,7 +15,7 @@
 
         <!-- Authenticated Navigation: show avatar + dropdown -->
         <template v-else>
-          <div class="relative" @click.outside="closeDropdown">
+          <div class="relative">
             <button @click="toggleDropdown" class="flex items-center gap-2 focus:outline-none">
               <img :src="avatarSrc" alt="Profile" class="h-9 w-9 rounded-full object-cover border" />
             </button>

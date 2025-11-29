@@ -25,6 +25,15 @@ class E2EFlowTest extends TestCase
         $freelancer = User::create(['name' => 'Freelancer Tester','email' => 'freelancertest@example.com','password' => bcrypt('password')]);
         $freelancer->assignRole('freelancer');
 
+        // create a minimal project record (tests expect project id 1)
+        \DB::table('projects')->insert([
+            'id' => 1,
+            'title' => 'Test Project',
+            'description' => 'Auto-created project for tests',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         // Acting as freelancer create invoice
         $this->actingAs($freelancer, 'sanctum');
         $resp = $this->postJson('/api/projects/1/invoice', [
