@@ -52,7 +52,7 @@ class AuthController extends Controller
             }
 
             return response()->json([
-                'message' => 'User registered successfully!',
+                'message' => 'User registered successfully',
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'user' => $user
@@ -121,6 +121,6 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => 'Logged out successfully']);
     }
 }

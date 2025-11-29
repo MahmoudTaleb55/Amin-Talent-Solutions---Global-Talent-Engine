@@ -104,4 +104,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('portfolios', [\App\Http\Controllers\PortfolioController::class, 'store']);
     Route::post('portfolios/{id}/attachments', [\App\Http\Controllers\PortfolioController::class, 'uploadAttachment']);
     Route::delete('portfolios/{id}', [\App\Http\Controllers\PortfolioController::class, 'destroy']);
+
+    // Simple admin-only test route (used by tests)
+    Route::get('admin-only-route', function() { return response()->json(['ok' => true]); })->middleware('role:admin');
 });
